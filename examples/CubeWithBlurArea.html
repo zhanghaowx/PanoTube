@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Here Panorama with Blur Area</title>
+    <style>
+        body {
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script data-main="config.js" src="../src/lib/require.js"></script>
+    <script type="application/javascript">
+        // Start loading the main app file. Put all of your application logic in there.
+        requirejs(['../src/here-cube'], function () {
+            var cube = $("#container").cubeImagery({
+                tiles: [
+                'images/19375394_r8_f0_x0_y0.jpg',
+                'images/19375394_r8_f1_x0_y0.jpg',
+                'images/19375394_r8_f2_x0_y0.jpg',
+                'images/19375394_r8_f3_x0_y0.jpg',
+                'images/19375394_r8_f4_x0_y0.jpg',
+                'images/19375394_r8_f5_x0_y0.jpg'],
+                resolution: 8,
+                blurArea: {
+                    width: 10,
+                    height: 10,
+                    azimuth: 25,
+                    polar: 90,
+                    offset: 10,
+                    focus: true,
+                    static: true
+                }
+            });
+            cube.createDebugGUI();
+        });
+    </script>
+</body>
+
+</html>

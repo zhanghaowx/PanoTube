@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Here Panorama</title>
+    <style>
+        body {
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script data-main="config.js" src="../src/lib/require.js"></script>
+<script type="application/javascript">
+    requirejs(['../src/here-cube'], function() {
+        var cube = $("#container").cubeImagery({
+            tiles: [
+                'images/19375394_r8_f0_x0_y0.jpg',
+                'images/19375394_r8_f1_x0_y0.jpg',
+                'images/19375394_r8_f2_x0_y0.jpg',
+                'images/19375394_r8_f3_x0_y0.jpg',
+                'images/19375394_r8_f4_x0_y0.jpg',
+                'images/19375394_r8_f5_x0_y0.jpg'],
+            resolution: 8,
+            showBlurArea: false
+        });
+        cube.createDebugGUI();
+    });
+</script>
+</body>
+</html>
