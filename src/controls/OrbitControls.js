@@ -1,4 +1,4 @@
-define(["lib/three", "core/Object3D"], function() {
+define(["threejs/three", "core/Object3D"], function() {
     // This set of controls performs orbiting, and zooming. It maintains
     // the "up" direction as +Y. Touch on tablet and phones is supported.
     //
@@ -36,8 +36,8 @@ define(["lib/three", "core/Object3D"], function() {
         // List of selectable objects
         this.selectable = [];
 
-		// List of selected objects
-		this.selected = [];
+        // List of selected objects
+        this.selected = [];
 
         // Internals
         var that = this;
@@ -55,7 +55,7 @@ define(["lib/three", "core/Object3D"], function() {
                 that.yaw += that.autoRotateSpeed;
             }
 
-			that.yaw = (that.yaw + 180 + 360) % 360 - 180; // adjust yaw's value to [-180, 180]
+            that.yaw = (that.yaw + 180 + 360) % 360 - 180; // adjust yaw's value to [-180, 180]
             that.pitch = Math.max(-85, Math.min(85, that.pitch)); // adjust pitch's value to [-85, 85]
 
             var theta = THREE.Math.degToRad(that.yaw);
@@ -78,7 +78,7 @@ define(["lib/three", "core/Object3D"], function() {
             var point = new THREE.Vector3(((event.clientX - domElement.offsetLeft) / domElement.width) * 2 - 1,
                     -((event.clientY - domElement.offsetTop) / domElement.height) * 2 + 1, 0.5);
             that.projector.unprojectVector(point, that.camera);
-			point.normalize();
+            point.normalize();
             return point;
         };
 
@@ -111,15 +111,15 @@ define(["lib/three", "core/Object3D"], function() {
                 succeed: function(intersects) { // some objects are clicked
                     isUserSelect = true;
 
-					// notify all objects of mouse down
-					for(var i = 0; i < intersects.length; i++) {
-						var object = intersects[i].object;
-						var point = intersects[i].point
-						object.onMouseDown(point, true);
-						that.selected.push(object);
-					}
+                    // notify all objects of mouse down
+                    for(var i = 0; i < intersects.length; i++) {
+                        var object = intersects[i].object;
+                        var point = intersects[i].point
+                        object.onMouseDown(point, true);
+                        that.selected.push(object);
+                    }
                 },
-                fail: function() {	// no object is clicked
+                fail: function() {    // no object is clicked
                     isUserRotating = true;
 
                     onMouseDownMouseX = event.clientX;
@@ -140,10 +140,10 @@ define(["lib/three", "core/Object3D"], function() {
             event.preventDefault();
 
             if (isUserSelect === true) {
-				// notify all objects of mouse move
-				for(var i = 0; i < that.selected.length; i++) {
-					that.selected[i].onMouseMove(getMouseCoordinates(event), false);
-				}
+                // notify all objects of mouse move
+                for(var i = 0; i < that.selected.length; i++) {
+                    that.selected[i].onMouseMove(getMouseCoordinates(event), false);
+                }
             } else if (isUserRotating === true) {
                 that.yaw = (onMouseDownMouseX - event.clientX) * 0.1 + onMouseDownLon;
                 that.pitch = (event.clientY - onMouseDownMouseY) * 0.1 + onMouseDownLat;
@@ -159,12 +159,12 @@ define(["lib/three", "core/Object3D"], function() {
             isUserRotating = false;
             isUserSelect = false;
 
-			// notify all objects of mouse up
-			for(var i = 0; i < that.selected.length; i++) {
-				that.selected[i].onMouseUp(getMouseCoordinates(event), false);
-			}
+            // notify all objects of mouse up
+            for(var i = 0; i < that.selected.length; i++) {
+                that.selected[i].onMouseUp(getMouseCoordinates(event), false);
+            }
 
-			that.selected = [];
+            that.selected = [];
 
             that.domElement.removeEventListener('mousemove', that.onMouseMove,  false);
         };

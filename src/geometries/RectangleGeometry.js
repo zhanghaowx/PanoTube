@@ -1,4 +1,4 @@
-define(["core/Math", "lib/three"], function () {
+define(["core/Math", "threejs/three"], function () {
 
     /**
      * Create a rectangle and map it to the surface of a sphere located at (0, 0, 0)

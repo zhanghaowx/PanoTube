@@ -1,18 +1,18 @@
-define(["lib/three", "geometries/RectangleOutlineGeometry"], function () {
+define(["threejs/three", "geometries/RectangleOutlineGeometry"], function () {
     /**
      * Create a mesh for the blur area
      */
     THREE.BlurAreaOutlineMesh = function (yaw, pitch, widthInDeg, heightInDeg) {
-        
+
         this.parameters = {};
-        
+
         /**
          * Rebuild the mesh with a new set of parameters
-         */ 
+         */
         this.rebuild = function(parameters) {
             console.error("Rebuild blur area outline mesh is not supported yet!");
         };
-        
+
         // Internals
         var that = this;
 
@@ -24,7 +24,7 @@ define(["lib/three", "geometries/RectangleOutlineGeometry"], function () {
             if (pitch != null) {
                 that.parameters.pitch = pitch;
             }
-            
+
             if (widthInDeg != null) {
                 that.parameters.heightInDeg = heightInDeg;
             }
@@ -32,8 +32,8 @@ define(["lib/three", "geometries/RectangleOutlineGeometry"], function () {
             if (heightInDeg != null) {
                 that.parameters.widthInDeg = widthInDeg;
             }
-            
-        };                
+
+        };
         setupParameters(yaw, pitch, widthInDeg, heightInDeg);
 
         // construct
@@ -44,8 +44,8 @@ define(["lib/three", "geometries/RectangleOutlineGeometry"], function () {
             overdraw: 0.1,
             side: THREE.DoubleSide
         });
-        
-        this.outlineGeometry = new THREE.RectangleOutlineGeometry(this.parameters);        
+
+        this.outlineGeometry = new THREE.RectangleOutlineGeometry(this.parameters);
         THREE.Mesh.call(this, this.outlineGeometry, meshMaterial);
     };
 

@@ -1,4 +1,4 @@
-define(["core/Math", "lib/three"], function () {
+define(["core/Math", "threejs/three"], function () {
 
     /**
      * Create a rectangle outline and map it to the surface of a sphere located at (0, 0, 0)
@@ -36,7 +36,7 @@ define(["core/Math", "lib/three"], function () {
 
             var lineThicknessInDeg = Math.min(widthInDeg, heightInDeg) * 0.05;
             // 0.1 <= lineThicknessInDeg <= 0.5
-            lineThicknessInDeg = Math.min(0.5, Math.max(0.1, lineThicknessInDeg));            
+            lineThicknessInDeg = Math.min(0.5, Math.max(0.1, lineThicknessInDeg));
 
             var divide = this.divide;
 
@@ -164,7 +164,7 @@ define(["core/Math", "lib/three"], function () {
 
             var lowerLeft = THREE.Math.yawPitchToPoint(fromYawPitch.yaw, fromYawPitch.pitch - thickness).add(that.center);
             var lowerRight = THREE.Math.yawPitchToPoint(toYawPitch.yaw, toYawPitch.pitch - thickness).add(that.center);
-            
+
             createLine(upperLeft, upperRight, lowerLeft, lowerRight);
         };
         function addBottomLine(fromYawPitch, toYawPitch, thickness) {
@@ -173,7 +173,7 @@ define(["core/Math", "lib/three"], function () {
 
             var lowerLeft = THREE.Math.yawPitchToPoint(fromYawPitch.yaw, fromYawPitch.pitch).add(that.center);
             var lowerRight = THREE.Math.yawPitchToPoint(toYawPitch.yaw, toYawPitch.pitch).add(that.center);
-            
+
             createLine(upperLeft, upperRight, lowerLeft, lowerRight);
         };
 
@@ -189,7 +189,7 @@ define(["core/Math", "lib/three"], function () {
 
             var lowerLeft = THREE.Math.yawPitchToPoint(toYawPitch.yaw, toYawPitch.pitch).add(that.center);
             var lowerRight = THREE.Math.yawPitchToPoint(toYawPitch.yaw + thickness, toYawPitch.pitch).add(that.center);
-            
+
             createLine(upperLeft, upperRight, lowerLeft, lowerRight);
 
         };
@@ -199,12 +199,12 @@ define(["core/Math", "lib/three"], function () {
 
             var lowerLeft = THREE.Math.yawPitchToPoint(toYawPitch.yaw - thickness, toYawPitch.pitch).add(that.center);
             var lowerRight = THREE.Math.yawPitchToPoint(toYawPitch.yaw, toYawPitch.pitch).add(that.center);
-            
+
             createLine(upperLeft, upperRight, lowerLeft, lowerRight);
 
         };
 
-        
+
         function createLine(upperLeft, upperRight, lowerLeft, lowerRight) {
             var idxOffset = that.vertices.length;
 

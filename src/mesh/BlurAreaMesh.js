@@ -1,4 +1,4 @@
-define(["lib/three", "geometries/RectangleGeometry"], function () {
+define(["threejs/three", "geometries/RectangleGeometry"], function () {
 
     /**
      * Create a mesh for the blur area
@@ -17,10 +17,10 @@ define(["lib/three", "geometries/RectangleGeometry"], function () {
 
         this.minHeight = 0.5;
         this.maxHeight = 180;
-        
+
         this.minPitch = -90;
         this.maxPitch = 90;
-        
+
         /**
          * Offset in degrees that the blur area needs to be away from north/south pole
          */
@@ -86,19 +86,19 @@ define(["lib/three", "geometries/RectangleGeometry"], function () {
                 this.children.push(circleMesh);
             }
         };
-        
+
         /**
          * Rebuild the mesh with a new set of parameters
-         */ 
+         */
         this.rebuild = function(parameters) {
             setupParameters(parameters.yaw, parameters.pitch, parameters.widthInDeg, parameters.heightInDeg);
             rebuildRectangleGeometry();
             moveControllers(); // move controllers should come after rebuilding geometry
         };
-        
+
         // Internals
         var that = this;
-        
+
         /**
          * Resize the rectangle mesh
          */
@@ -106,16 +106,16 @@ define(["lib/three", "geometries/RectangleGeometry"], function () {
 
             var thisYawPitch = THREE.Math.pointToYawPitch(revertRotate(originalPoint.clone()));
             var thatYawPitch = THREE.Math.pointToYawPitch(revertRotate(newPoint.clone()));
-            
+
             var newYaw = that.parameters.yaw + (thatYawPitch.yaw - thisYawPitch.yaw) / 2.0;
             var newPitch = that.parameters.pitch + (thatYawPitch.pitch - thisYawPitch.pitch) / 2.0;
-            
+
             var newWidth = Math.abs((thisYawPitch.yaw + thatYawPitch.yaw));
             var newHeight = Math.abs(thisYawPitch.pitch + thatYawPitch.pitch);
-                        
+
             newHeight = Math.min((that.parameters.pitch - that.minPitch - that.offset) * 2.0, newHeight);
-            newHeight = Math.min((that.maxPitch - that.parameters.pitch - that.offset) * 2.0, newHeight);            
-                                    
+            newHeight = Math.min((that.maxPitch - that.parameters.pitch - that.offset) * 2.0, newHeight);
+
             setupParameters(newYaw, newPitch, newWidth, newHeight);
 
             rebuildRectangleGeometry();
@@ -155,7 +155,7 @@ define(["lib/three", "geometries/RectangleGeometry"], function () {
                 child.geometry.computeBoundingSphere();
             }
         }
-        
+
         var rebuildRectangleGeometry = function() {
             that.rectangleGeometry.rebuild(that.parameters);
         }
@@ -194,7 +194,7 @@ define(["lib/three", "geometries/RectangleGeometry"], function () {
             if (pitch != null) {
                 that.parameters.pitch = Math.min(that.maxPitch, Math.max(that.minPitch, pitch));
             }
-            
+
             if (widthInDeg != null) {
                 that.parameters.heightInDeg = Math.min(that.maxHeight, Math.max(that.minHeight, heightInDeg));
             }
@@ -202,15 +202,15 @@ define(["lib/three", "geometries/RectangleGeometry"], function () {
             if (heightInDeg != null) {
                 that.parameters.widthInDeg = Math.min(that.maxWidth, Math.max(that.minWidth, widthInDeg));
             }
-            
+
             correctParameters();
         };
-        
+
         var correctParameters = function() {
             that.parameters.pitch = Math.min(that.maxPitch - that.parameters.heightInDeg / 2.0 - that.offset, Math.max(that.minPitch + that.parameters.heightInDeg / 2.0 + that.offset, that.parameters.pitch));
         };
 
-                
+
         setupParameters(yaw, pitch, widthInDeg, heightInDeg);
 
         // construct

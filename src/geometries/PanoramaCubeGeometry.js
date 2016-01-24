@@ -1,4 +1,4 @@
-define(["lib/three"], function() {
+define(["threejs/three"], function() {
     /**
      * Base on BoxGeometry.js in THREE r67, adjusted the geometry to fit the use case of here maps.
      * @author hao
@@ -27,12 +27,12 @@ define(["lib/three"], function() {
         var depth_half = depth / 2;
 
         // Jourvey View Data Spec
-        buildPlane( 'x', 'y',   1, - 1, width, height, - depth_half, 0 ); 			// f0 - front
-        buildPlane( 'z', 'y',   1, - 1, depth, height, width_half, 1 ); 			// f1 - right
-        buildPlane( 'x', 'y', - 1, - 1, width, height, depth_half, 2 ); 			// f2 - back
-        buildPlane( 'z', 'y', - 1, - 1, depth, height, - width_half, 3 ); 			// f3 - left
-        buildPlane( 'x', 'z',   1,   1, width, depth, - height_half, 4 ); 			// f4 - bottom
-        buildPlane( 'x', 'z',   1, - 1, width, depth, height_half, 5 ); 			// f5 - top
+        buildPlane( 'x', 'y',   1, - 1, width, height, - depth_half, 0 );             // f0 - front
+        buildPlane( 'z', 'y',   1, - 1, depth, height, width_half, 1 );             // f1 - right
+        buildPlane( 'x', 'y', - 1, - 1, width, height, depth_half, 2 );             // f2 - back
+        buildPlane( 'z', 'y', - 1, - 1, depth, height, - width_half, 3 );             // f3 - left
+        buildPlane( 'x', 'z',   1,   1, width, depth, - height_half, 4 );             // f4 - bottom
+        buildPlane( 'x', 'z',   1, - 1, width, depth, height_half, 5 );             // f5 - top
 
 
         function buildPlane( u, v, udir, vdir, width, height, depth, materialIndex ) {

@@ -1,4 +1,4 @@
-define(["lib/three", "geometries/RectangleGeometry", "mesh/BlurAreaMesh", "mesh/BlurAreaOutlineMesh"], function () {
+define(["threejs/three", "geometries/RectangleGeometry", "mesh/BlurAreaMesh", "mesh/BlurAreaOutlineMesh"], function () {
 
     THREE.BlurArea = function () {
 
@@ -36,7 +36,7 @@ define(["lib/three", "geometries/RectangleGeometry", "mesh/BlurAreaMesh", "mesh/
         }
 
         /// Either addDynamicMesh or addStaticMesh should be called after constructor
-        
+
         this.addDynamicMesh = function (azimuth, polar, widthInDeg, heightInDeg, offset) {
             this.mesh = new THREE.BlurAreaMesh(azimuthToYaw(azimuth), polarToPitch(polar), widthInDeg, heightInDeg, offset);
             this.mesh.addControllers();

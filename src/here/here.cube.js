@@ -19,7 +19,7 @@ define([
     "geometries/PanoramaCubeGeometry",
     "controls/OrbitControls",
     "world/BlurArea",
-    "lib/three",
+    "threejs/three",
     "lib/dat.gui"
 ], function () {
     /**
@@ -95,7 +95,7 @@ define([
                 this.blurArea.addDynamicMesh(this.settings.blurArea.azimuth, this.settings.blurArea.polar,
                 this.settings.blurArea.width, this.settings.blurArea.height, this.settings.blurArea.offset);
             }
-            
+
             this.scene.add(this.blurArea);
 
             // move camera to blur area
