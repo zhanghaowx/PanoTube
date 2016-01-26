@@ -1,5 +1,5 @@
 define(["here/here.cube"], function () {
-    $.fn.cubeImagery = function (options) {
+    $.fn.cube = function (options) {
         var name = "hereCube";
         var cube = $(this).data(name);
         if (cube) {

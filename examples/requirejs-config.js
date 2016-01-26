@@ -2,19 +2,20 @@
 
 // Configure loading modules from the lib directory,
 requirejs.config({
-    //By default load any module IDs from src
     baseUrl: '../src',
     //paths config is relative to the baseUrl, and
     //never includes a ".js" extension since
     //the paths config could be for a directory.
     paths: {
-        threejs: '../node_modules/three',
-        lib: 'lib',
         here: 'here',
         core: 'core',
         tool: 'tool',
         controls: 'controls',
-        geometries: 'geometries'
+        geometries: 'geometries',
+        // 3rd libraries
+        three: '../node_modules/three/three.min',
+        datGui: 'https://github.com/dataarts/dat.gui/releases/download/v0.5.1/dat.gui.min',
+
     },
     //Remember: only use shim config for non-AMD scripts,
     //scripts that do not already call define(). The shim
@@ -23,6 +24,5 @@ requirejs.config({
     //be triggered, and the deps config will be confusing
     //for those cases.
     shim: {
-
     }
 });

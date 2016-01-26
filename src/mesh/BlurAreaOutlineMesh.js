@@ -1,4 +1,4 @@
-define(["threejs/three", "geometries/RectangleOutlineGeometry"], function () {
+define(["three", "geometries/RectangleOutlineGeometry"], function () {
     /**
      * Create a mesh for the blur area
      */

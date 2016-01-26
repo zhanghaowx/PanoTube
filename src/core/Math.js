@@ -1,4 +1,4 @@
-define(["threejs/three"], function () {
+define(["three"], function () {
 
     /**
      * Convert yaw, pitch to a point on the surface of a sphere

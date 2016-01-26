@@ -1,4 +1,4 @@
-define(["threejs/three", "geometries/RectangleGeometry", "mesh/BlurAreaMesh", "mesh/BlurAreaOutlineMesh"], function () {
+define(["three", "geometries/RectangleGeometry", "mesh/BlurAreaMesh", "mesh/BlurAreaOutlineMesh"], function () {
 
     THREE.BlurArea = function () {
 

@@ -19,8 +19,8 @@ define([
     "geometries/PanoramaCubeGeometry",
     "controls/OrbitControls",
     "world/BlurArea",
-    "threejs/three",
-    "lib/dat.gui"
+    "three",
+    "datGui"
 ], function () {
     /**
      * Cube3D represents a cube in a 3D world, and the camera is put in the

@@ -1,4 +1,4 @@
-define(["threejs/three", "core/Object3D"], function() {
+define(["three", "core/Object3D"], function() {
     // This set of controls performs orbiting, and zooming. It maintains
     // the "up" direction as +Y. Touch on tablet and phones is supported.
     //

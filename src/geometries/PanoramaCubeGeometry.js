@@ -1,4 +1,4 @@
-define(["threejs/three"], function() {
+define(["three"], function() {
     /**
      * Base on BoxGeometry.js in THREE r67, adjusted the geometry to fit the use case of here maps.
      * @author hao

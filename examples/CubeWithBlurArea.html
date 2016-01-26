@@ -12,12 +12,12 @@
 
 <body>
     <div id="container"></div>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script data-main="config.js" src="../src/lib/require.js"></script>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script data-main="requirejs-config.js" src="../node_modules/requirejs/require.js"></script>
     <script type="application/javascript">
         // Start loading the main app file. Put all of your application logic in there.
-        requirejs(['../src/here-cube'], function () {
-            var cube = $("#container").cubeImagery({
+        requirejs(['../src/cube'], function () {
+            var cube = $("#container").cube({
                 tiles: [
                 'images/19375394_r8_f0_x0_y0.jpg',
                 'images/19375394_r8_f1_x0_y0.jpg',
