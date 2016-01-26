@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/zhanghaowx/PanoTube",
   "dependencies": {
+    "almond": "^0.3.1",
     "requirejs": "^2.1.22",
     "three": "0.67"
   }

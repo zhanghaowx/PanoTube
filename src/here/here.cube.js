@@ -19,8 +19,7 @@ define([
     "geometries/PanoramaCubeGeometry",
     "controls/OrbitControls",
     "world/BlurArea",
-    "three",
-    "datGui"
+    "three"
 ], function () {
     /**
      * Cube3D represents a cube in a 3D world, and the camera is put in the
@@ -128,6 +127,7 @@ define([
 
     /**
      * Create a dashboard to monitor statistics
+     * Requires: dat.gui (https://github.com/dataarts/dat.gui)
      */
     HERE.Cube3D.prototype.createDebugGUI = function () {
         var gui = new dat.GUI();
