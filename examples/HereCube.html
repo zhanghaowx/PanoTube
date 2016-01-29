@@ -20,7 +20,7 @@
         // Start loading the main app file. Put all of your application logic in there.
         requirejs(['../src/cube', '../src/here/street.level'], function () {
             var urls = HERE.Panorama.getImageUrls("19375395", 10);
-            var cube = $("#container").cube({
+            var cube3D = $("#container").cube({
                 tiles: urls,
                 resolution: 10,
                 blurArea: {
@@ -33,7 +33,41 @@
                     static: true
                 }
             });
-            cube.createDebugGUI();
+            /**
+             * Create a dashboard to monitor statistics
+             * Requires: dat.gui (https://github.com/dataarts/dat.gui)
+             */
+            var createDebugGUI = function (cube3D) {
+                var gui = new dat.GUI();
+                var cameraGUI = gui.addFolder('Camera');
+                cameraGUI.add(cube3D.controller, 'autoRotate');
+                cameraGUI.add(cube3D.controller, 'autoRotateSpeed').min(0.1).max(1);
+                cameraGUI.add(cube3D.controller, 'yaw').min(-180).max(180).listen();
+                cameraGUI.add(cube3D.controller, 'pitch').min(-85).max(85).listen();
+                cameraGUI.add(cube3D.camera, 'fov')
+                    .min(cube3D.controller.minFov)
+                    .max(cube3D.controller.maxFov).listen().onChange(function () {
+                        cube3D.camera.updateProjectionMatrix();
+                    });
+                cameraGUI.open();
+
+                if (cube3D.settings.blurArea) {
+                    var blurGUI = gui.addFolder('Blur');
+                    blurGUI.add(cube3D.blurArea.mesh.parameters, 'yaw').listen();
+                    blurGUI.add(cube3D.blurArea.mesh.parameters, 'pitch').listen();
+                    blurGUI.add(cube3D.blurArea.mesh.parameters, 'widthInDeg').listen();
+                    blurGUI.add(cube3D.blurArea.mesh.parameters, 'heightInDeg').listen();
+
+                    blurGUI.open();
+                }
+
+                var debugGUI = gui.addFolder('Debug');
+                debugGUI.add(cube3D.settings, 'showPanorama').onChange(function (value) {
+                    cube3D.cube.visible = value;
+                });
+                debugGUI.open();
+            };
+            createDebugGUI(cube3D);
         });
     </script>
 </body>

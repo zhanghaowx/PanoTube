@@ -65,7 +65,7 @@ define([
             tiles: [],
             tilesReady: function () {},
             showPanorama: true,
-            showBlurArea: true,
+            /*
             blurArea: {
                 width: 5,
                 height: 5,
@@ -75,6 +75,7 @@ define([
                 offset: 10, // blur area needs be 10 degrees away from north/south pole,
                 static: false // whether or not allow rezie/move blur area
             }
+            */
         };
 
         this.settings = $.extend({}, this.defaults, options);
@@ -84,7 +85,7 @@ define([
         this.scene.add(this.cube);
 
         // create blur area
-        if (this.settings.showBlurArea) {
+        if (this.settings.blurArea) {
             this.blurArea = new THREE.BlurArea();
             if (this.settings.blurArea.static) {
                 this.blurArea.addStaticMesh(this.settings.blurArea.azimuth, this.settings.blurArea.polar,
@@ -122,41 +123,6 @@ define([
         }
 
         this.controller.selectable = [];
-    };
-
-    /**
-     * Create a dashboard to monitor statistics
-     * Requires: dat.gui (https://github.com/dataarts/dat.gui)
-     */
-    HERE.Cube3D.prototype.createDebugGUI = function () {
-        var gui = new dat.GUI();
-        var cube3D = this;
-
-        var cameraGUI = gui.addFolder('Camera');
-        cameraGUI.add(this.controller, 'autoRotate');
-        cameraGUI.add(this.controller, 'autoRotateSpeed').min(0.1).max(1);
-        cameraGUI.add(this.controller, 'yaw').min(-180).max(180).listen();
-        cameraGUI.add(this.controller, 'pitch').min(-85).max(85).listen();
-        cameraGUI.add(this.camera, 'fov').min(this.controller.minFov).max(this.controller.maxFov).listen().onChange(function () {
-            cube3D.camera.updateProjectionMatrix();
-        });
-        cameraGUI.open();
-
-        if (this.settings.showBlurArea) {
-            var blurGUI = gui.addFolder('Blur');
-            blurGUI.add(this.blurArea.mesh.parameters, 'yaw').listen();
-            blurGUI.add(this.blurArea.mesh.parameters, 'pitch').listen();
-            blurGUI.add(this.blurArea.mesh.parameters, 'widthInDeg').listen();
-            blurGUI.add(this.blurArea.mesh.parameters, 'heightInDeg').listen();
-
-            blurGUI.open();
-        }
-
-        var debugGUI = gui.addFolder('Debug');
-        debugGUI.add(this.settings, 'showPanorama').onChange(function (value) {
-            cube3D.cube.visible = value;
-        });
-        debugGUI.open();
     };
 
     /**
