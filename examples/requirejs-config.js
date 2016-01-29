@@ -13,7 +13,7 @@ requirejs.config({
         controls: 'controls',
         geometries: 'geometries',
         // 3rd libraries
-        three: '../node_modules/three/three.min'
+        three: '../node_modules/three/three'
     },
     //Remember: only use shim config for non-AMD scripts,
     //scripts that do not already call define(). The shim
