@@ -13,11 +13,12 @@
 
 define([
     "here/api",
+    "here/street.level",
     "core/String",
-    "core/Object3D",
     "geometries/PanoramaCubeGeometry",
     "controls/OrbitControls",
     "world/BlurArea",
+    "core/Object3D",
     "three"
 ], function () {
     /**
@@ -62,6 +63,7 @@ define([
             autoRotate: false,
             rotateSpeed: 0.1,
             resolution: 9,
+            imageId: "42762724",
             tiles: [],
             tilesReady: function () {},
             showPanorama: true,
@@ -167,7 +169,11 @@ define([
          * <li>r11: each face has 8 x 8 = 64 tiles</li>
          */
         var materials = [];
-        var tiles = this.settings.tiles;
+        var tiles = [];
+        if (this.settings.tiles.length > 0)
+            var tiles = this.settings.tiles;
+        else
+            var tiles = HERE.Panorama.getImageUrls(this.settings.imageId, this.settings.resolution);
         for (var i = 0; i < tiles.length; i++) {
             materials.push(getTexture(tiles[i]));
         }

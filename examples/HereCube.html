@@ -19,10 +19,9 @@
     <script type="application/javascript">
         // Start loading the main app file. Put all of your application logic in there.
         requirejs(['../src/cube', '../src/here/street.level'], function () {
-            var urls = HERE.Panorama.getImageUrls("19375395", 10);
             var cube3D = $("#container").cube({
-                tiles: urls,
-                resolution: 10,
+                imageId: "19375395",
+                resolution: 11,
                 blurArea: {
                     width: 10,
                     height: 10,
