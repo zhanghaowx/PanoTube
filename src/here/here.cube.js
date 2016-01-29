@@ -11,9 +11,8 @@
  * The definitions of face number(f), tile number(x,y) and resolution(r) are the same as in journey view API documentation.
  */
 
-var HERE = HERE || {};
-
 define([
+    "here/api",
     "core/String",
     "core/Object3D",
     "geometries/PanoramaCubeGeometry",
@@ -64,7 +63,7 @@ define([
             rotateSpeed: 0.1,
             resolution: 9,
             tiles: [],
-            tilesReady: function() {},
+            tilesReady: function () {},
             showPanorama: true,
             showBlurArea: true,
             blurArea: {
@@ -87,12 +86,12 @@ define([
         // create blur area
         if (this.settings.showBlurArea) {
             this.blurArea = new THREE.BlurArea();
-            if(this.settings.blurArea.static) {
+            if (this.settings.blurArea.static) {
                 this.blurArea.addStaticMesh(this.settings.blurArea.azimuth, this.settings.blurArea.polar,
-                this.settings.blurArea.width, this.settings.blurArea.height);
+                    this.settings.blurArea.width, this.settings.blurArea.height);
             } else {
                 this.blurArea.addDynamicMesh(this.settings.blurArea.azimuth, this.settings.blurArea.polar,
-                this.settings.blurArea.width, this.settings.blurArea.height, this.settings.blurArea.offset);
+                    this.settings.blurArea.width, this.settings.blurArea.height, this.settings.blurArea.offset);
             }
 
             this.scene.add(this.blurArea);
@@ -104,7 +103,7 @@ define([
             }
 
             // add blur area to selectable
-            if(!this.settings.blurArea.static) {
+            if (!this.settings.blurArea.static) {
                 this.controller.selectable.push(this.blurArea);
             }
         }
@@ -185,7 +184,7 @@ define([
             return new THREE.MeshBasicMaterial({
                 map: THREE.ImageUtils.loadTexture(path, undefined, function () {
                     tilesReadyCount = tilesReadyCount + 1;
-                    if(tilesReadyCount == that.settings.tiles.length) {
+                    if (tilesReadyCount == that.settings.tiles.length) {
                         that.settings.tilesReady();
                     }
                 }, function () {
