@@ -5,10 +5,11 @@
 npm install
 ```
 
-## Run Examples
-Open examples/*.html files
+## Examples
+See examples/*.html
 
 ## Generate Build
 ```
-r.js
+cd build
+r.js -o app.build.js
 ```
