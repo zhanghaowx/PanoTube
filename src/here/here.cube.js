@@ -64,16 +64,17 @@ define([
     HERE.Cube3D.prototype.loadPanorama = function (options) {
         THREE.ImageUtils.crossOrigin = ''; // allow images from cross-origin servers
 
+        var that = this;
+
         // create user settings
         this.defaults = {
-            cubeSize: 1000, // size of the panorama cube
-            autoRotate: false,
-            rotateSpeed: 0.1,
-            resolution: 9, // if unset, use dynamic resolution (start from lowest resolution, and increase until resolution is high)
+            cubeSize: 1000, // used internally for dynamic resolutioni, controls size of the panorama cube
+            resolution: 8, // used internally for dynamic resolution (start from lowest resolution, and increase until resolution is high)
             imageId: "", // either imageId or tiles must be set
             tiles: [],
-            tilesReady: function () {
-                console.log("All tiles are loaded");
+            onCubeReady: function () {
+                that.upgrade();
+                console.log("Cube (#{0}) of resolution {1} is loaded.".f(that.settings.imageId, that.settings.resolution));
             },
             showPanorama: true,
             // example of blurArea settings
@@ -110,12 +111,39 @@ define([
             // TODO: extrac imageId from any url in tiles
         }
 
-        if (this.resolution < 8 || this.resolution > 11) {
-            console.error("Fail to create cube: resolution value should be in [8, 11].");
+        // Don't allow resolution 11 because it is more than necessary
+        if (this.settings.resolution < 8 || this.settings.resolution > 10) {
+            console.error("Fail to create cube: resolution value should be in [8, 10].");
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * Upgrade resolution to next level
+     */
+    HERE.Cube3D.prototype.upgrade = function () {
+        this.settings.cubeSize++;
+        this.settings.resolution++;
+        this.settings.tiles = [];
+
+        // save before being changed
+        var oldCube = this.cube;
+        var oldOnCubeReady = this.settings.onCubeReady;
+
+        if (this.validate()) {
+            // remove old cube when new cube is ready
+            var that = this;
+            this.settings.onCubeReady = function () {
+                that.scene.remove(oldCube);
+                oldOnCubeReady();
+            }
+            this.createPanorama();
+        } else {
+            this.settings.cubeSize--;
+            this.settings.resolution--;
+        }
     }
 
     /**
@@ -193,7 +221,7 @@ define([
             map: THREE.ImageUtils.loadTexture(path, undefined, function () {
                 tilesReadyCount++;
                 if (tilesReadyCount == that.settings.tiles.length) {
-                    that.settings.tilesReady();
+                    that.settings.onCubeReady();
                 }
             }, function () {
                 console.error("Fail to load " + path);

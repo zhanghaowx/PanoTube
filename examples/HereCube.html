@@ -19,9 +19,8 @@
     <script type="application/javascript">
         // Start loading the main app file. Put all of your application logic in there.
         requirejs(['../src/cube', '../src/here/street.level'], function () {
-            cube3D = $("#container").cube({
-                imageId: "42762724",
-                resolution: 8,
+            var cube3D = $("#container").cube({
+                imageId: Math.floor((Math.random() * 100) + 42762725).toString(),
                 /*
                 blurArea: {
                     width: 10,
@@ -34,6 +33,9 @@
                 }
                 */
             });
+            cube3D.controller.autoRotate = true;
+            cube3D.controller.autoRotateSpeed = 0.1;
+
             /**
              * Create a dashboard to monitor statistics
              * Requires: dat.gui (https://github.com/dataarts/dat.gui)
