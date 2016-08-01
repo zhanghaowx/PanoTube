@@ -18,7 +18,7 @@
     <script data-main="../src/config.js" src="../node_modules/requirejs/require.js"></script>
     <script type="application/javascript">
         // Start loading the main app file. Put all of your application logic in there.
-        requirejs(['app', 'here/street.level'], function () {
+        requirejs(['app', 'here/API'], function () {
             var randomPanoId = Math.floor((Math.random() * 100) + 1080363417).toString();
             var cube3D = $("#container").cube({
                 tiles: HERE.Panorama.getImageUrls(randomPanoId, 0),
