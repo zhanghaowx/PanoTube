@@ -3,6 +3,12 @@ define(["core/String"], function () {
     HERE.Panorama = {};
     HERE.Panorama.SERVER_URL = "http://sli.data.here.com";
     HERE.Panorama.IMAGES_PER_DIMENSION = [1, 2, 4, 8];
+    HERE.Panorama.RESOLUTION = {
+        LOW: 0,
+        MEDIUM: 1,
+        HIGH: 2,
+        ULTRA: 3
+    }
 
     /**
      * This function generates a list of HERE street level image URLs based on passed in resolution level.
