@@ -6,11 +6,11 @@
  */
 
 define([
-    "core/String",
     "geometries/PanoramaCubeGeometry",
     "controls/OrbitControls",
-    "world/BlurArea",
+    "scene/BlurArea",
     "core/Object3D",
+    "core/String",
     "three"
 ], function () {
     /**

@@ -1,27 +1,26 @@
 {
-  "name": "PanoTube",
-  "version": "1.0.0",
-  "description": "Choose a route a play it by using street level images (panoramas).",
+  "name": "Panorama",
+  "version": "0.0.1",
+  "description": "A Lightweight Panorama Viewer.",
   "main": "index.js",
   "directories": {
     "example": "examples"
   },
   "scripts": {
-    "test": "npm test"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/zhanghaowx/PanoTube.git"
+    "url": "https://github.com/zhanghaowx/Panorama.git"
   },
   "keywords": [
-    "pano"
+    "panorame"
   ],
   "author": "Hao Zhang",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zhanghaowx/PanoTube/issues"
+    "url": "https://github.com/zhanghaowx/Panorama/issues"
   },
-  "homepage": "https://github.com/zhanghaowx/PanoTube",
+  "homepage": "",
   "dependencies": {
     "almond": "^0.3.1",
     "requirejs": "^2.1.22",

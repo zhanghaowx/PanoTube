@@ -1,4 +1,4 @@
-# PanoTube
+# Panorama
 
 ## Install Dependencies
 ```
@@ -11,6 +11,5 @@ Live example can be found [here](http://zhanghaowx.github.io/panorama.html).
 
 ## Generate Build
 ```
-cd build
-r.js -o app.build.js
+r.js -o build/app.build.js
 ```

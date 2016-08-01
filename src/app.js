@@ -1,4 +1,4 @@
-define(["scene/scene"], function (Cube3D) {
+define(["scene/Cube3D"], function (Cube3D) {
     $.fn.cube = function (options) {
         var name = "cube3D";
         var cube = $(this).data(name);
