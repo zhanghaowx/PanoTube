@@ -1,13 +1,5 @@
-/**
- * This library helps to draw a panorama image in web browser.
- * It builds on three.js r67. There is no guarantee that it will work with
- * other version of three.js.
- */
-
 define([
     "geometries/PanoramaCubeGeometry",
-    "controls/OrbitControls",
-    "scene/BlurArea",
     "core/Object3D",
     "core/String",
     "three"
@@ -23,54 +15,24 @@ define([
      * middle of this cube. Panoramic images are loaded for all the 6 faces of
      * the cube.
      */
-    var Cube3D = function (mapContainer, options) {
+    var Cube3D = function (options) {
         // create user settings
         this.settings = $.extend({
             tiles: [], // in order of front,right,back,left,bottom,top
             onTilesReady: function () {}, // get notification when all tiles are loaded
-            showPanorama: true, // visibility of panorama, used for debugging
         }, options);
-
-        // create a perspective camera
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-        // create a proper renderer
-        this.renderer = this.supportsWebGL() ? new THREE.WebGLRenderer({
-            antialias: true,
-            preserveDrawingBuffer: true // for taking screenshots, it can cause significant performance loss on some platforms
-        }) : new THREE.CanvasRenderer();
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-
-        // create a camera controller
-        this.controller = new THREE.OrbitControls(this.camera, this.renderer.domElement);
-
-        // link renderer to a DOM element
-        this.mapContainer = mapContainer[0];
-        this.mapContainer.appendChild(this.renderer.domElement);
-
-        // create a scene and add needed meshes for displaying panoramas
-        this.scene = new THREE.Scene();
-
-        // bind resize event
-        window.addEventListener('resize', this.onWindowResize.bind(this), false);
-
-        this.draw();
     };
-
-    /**
-     * Load panorama image to renderer
-     */
-    Cube3D.prototype.loadScene = function (options) {
-        $.extend(this.settings, options);
-        this.createPanorama();
-        this.createBlurArea();
-    }
 
     /**
      * Check if the configuration is valid and fill some optional (unset) configuration values
      */
-    Cube3D.prototype.validate = function () {
-        var tilesPerFace = Math.round(this.settings.tiles.length / 6);
+    Cube3D.validate = function (options) {
+        if (!options.tiles) {
+            console.debug("Skip creating cube: no tiles defined!");
+            return false;
+        }
+
+        var tilesPerFace = Math.round(options.tiles.length / 6);
         switch (tilesPerFace) {
         case 0:
             break;
@@ -87,77 +49,12 @@ define([
             cubeResolution = 3;
             break;
         default:
-            console.error("Fail to create cube: invlaid number of tiles {0}!".format(this.settings.tiles.length));
+            console.debug("Skip creating cube: invlaid number of tiles {0}!".format(options.tiles.length));
             return false;
         }
 
         return true;
     }
-
-    /**
-     * Clear current panorama
-     */
-    Cube3D.prototype.clearPanorama = function () {
-        this.scene.remove(this.cube);
-        this.cube = null;
-    };
-
-    Cube3D.prototype.createPanorama = function () {
-        if (!this.validate())
-            return;
-
-        this.cube = this.createCube();
-        this.scene.add(this.cube);
-    }
-
-    Cube3D.prototype.clearBlurArea = function () {
-        if (this.blurArea != null) {
-            this.scene.remove(this.blurArea);
-            this.blurArea = null;
-        }
-
-        this.controller.selectable = [];
-    }
-
-    Cube3D.prototype.createBlurArea = function () {
-        if (!this.validate())
-            return;
-
-        if (this.settings.blurArea) {
-            this.blurArea = new THREE.BlurArea();
-            if (this.settings.blurArea.static) {
-                this.blurArea.addStaticMesh(this.settings.blurArea.azimuth, this.settings.blurArea.polar,
-                    this.settings.blurArea.width, this.settings.blurArea.height);
-            } else {
-                this.blurArea.addDynamicMesh(this.settings.blurArea.azimuth, this.settings.blurArea.polar,
-                    this.settings.blurArea.width, this.settings.blurArea.height, this.settings.blurArea.offset);
-            }
-
-            this.scene.add(this.blurArea);
-
-            // move camera to blur area
-            if (this.settings.blurArea.focus) {
-                this.controller.yaw = this.blurArea.getParameters().yaw;
-                this.controller.pitch = this.blurArea.getParameters().pitch;
-            }
-
-            // add blur area to selectable
-            if (!this.settings.blurArea.static) {
-                this.controller.selectable.push(this.blurArea);
-            }
-        }
-    }
-
-    /**
-     * Detects whether the web browser supports WebGL or not
-     */
-    Cube3D.prototype.supportsWebGL = function () {
-        try {
-            return !!window.WebGLRenderingContext && !!document.createElement('canvas').getContext('experimental-webgl');
-        } catch (e) {
-            return false;
-        }
-    };
 
     /**
      * Load texture for a image tile
@@ -234,22 +131,6 @@ define([
         }
 
         return new THREE.Mesh(geometry, this.createMaterials());
-    };
-
-    Cube3D.prototype.update = function () {
-        this.controller.update();
-        this.renderer.render(this.scene, this.camera);
-    };
-
-    Cube3D.prototype.draw = function () {
-        requestAnimationFrame(this.draw.bind(this));
-        this.update();
-    };
-
-    Cube3D.prototype.onWindowResize = function () {
-        this.camera.aspect = window.innerWidth / window.innerHeight;
-        this.camera.updateProjectionMatrix();
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
     };
 
     return Cube3D;
