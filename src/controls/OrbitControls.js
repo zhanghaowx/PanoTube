@@ -1,18 +1,19 @@
-define(["three", "core/Object3D"], function() {
+define(["three", "core/Object3D"], function () {
     // This set of controls performs orbiting, and zooming. It maintains
     // the "up" direction as +Y. Touch on tablet and phones is supported.
     //
     //    Orbit - left mouse / touch: one finger move
     //    Zoom - middle mouse, or mousewheel / touch: two finger spread or squish
     //
-    THREE.OrbitControls = function(camera, domElement) {
+    THREE.OrbitControls = function (camera, domElement) {
         this.camera = camera;
         this.domElement = (domElement !== undefined) ? domElement : document;
 
         // API
 
         // create a projection to convert between 2D and 3D points
-        this.projector = new THREE.Projector();
+        // no longer needed after r79
+        //this.projector = new THREE.Projector();
 
         // Set false to disable this control
         this.enabled = true;
@@ -50,7 +51,7 @@ define(["three", "core/Object3D"], function() {
         var onMouseDownLon = 0;
         var onMouseDownLat = 0;
 
-        this.update = function() {
+        this.update = function () {
             if (that.autoRotate && !isUserRotating && !isUserSelect) {
                 that.yaw += that.autoRotateSpeed;
             }
@@ -72,12 +73,16 @@ define(["three", "core/Object3D"], function() {
         /**
          * Converts mouse click positions into a 3D coordinates
          */
-        var getMouseCoordinates = function(event) {
+        var getMouseCoordinates = function (event) {
             // create mouse point in Normalized Device Coordinate (NDC) Space
             var domElement = that.domElement;
-            var point = new THREE.Vector3(((event.clientX - domElement.offsetLeft) / domElement.width) * 2 - 1,
-                    -((event.clientY - domElement.offsetTop) / domElement.height) * 2 + 1, 0.5);
-            that.projector.unprojectVector(point, that.camera);
+            var point = new THREE.Vector3(
+                ((event.clientX - domElement.offsetLeft) / domElement.width) * 2 - 1,
+                -((event.clientY - domElement.offsetTop) / domElement.height) * 2 + 1,
+                0.5);
+            //that.projector.unprojectVector(point, that.camera);
+            //r67 -> r79
+            point.unproject(that.camera);
             point.normalize();
             return point;
         };
@@ -85,41 +90,41 @@ define(["three", "core/Object3D"], function() {
         /**
          * Computes intersects of mouse clicks with any selectable objects
          */
-        var computeIntersects = function(event, callbacks) {
+        var computeIntersects = function (event, callbacks) {
             var mouse = getMouseCoordinates(event);
             var intersects = (new THREE.Raycaster(that.camera.position,
                 mouse.sub(that.camera.position).normalize())).intersectObjects(that.selectable, true);
 
-            if(intersects.length > 0) {
-                if(callbacks.succeed) {
+            if (intersects.length > 0) {
+                if (callbacks.succeed) {
                     callbacks.succeed(intersects);
                 }
             } else {
-                if(callbacks.fail) {
+                if (callbacks.fail) {
                     callbacks.fail();
                 }
             }
         };
 
-        var onMouseDown = function(event) {
-            if(that.enabled === false) {
+        var onMouseDown = function (event) {
+            if (that.enabled === false) {
                 return;
             }
 
             event.preventDefault();
             computeIntersects(event, {
-                succeed: function(intersects) { // some objects are clicked
+                succeed: function (intersects) { // some objects are clicked
                     isUserSelect = true;
 
                     // notify all objects of mouse down
-                    for(var i = 0; i < intersects.length; i++) {
+                    for (var i = 0; i < intersects.length; i++) {
                         var object = intersects[i].object;
                         var point = intersects[i].point
                         object.onMouseDown(point, true);
                         that.selected.push(object);
                     }
                 },
-                fail: function() {    // no object is clicked
+                fail: function () { // no object is clicked
                     isUserRotating = true;
 
                     onMouseDownMouseX = event.clientX;
@@ -130,18 +135,18 @@ define(["three", "core/Object3D"], function() {
                 }
             });
 
-            that.domElement.addEventListener('mousemove', that.onMouseMove,  false);
+            that.domElement.addEventListener('mousemove', that.onMouseMove, false);
         };
 
-        var onMouseMove = function(event) {
-            if(that.enabled === false) {
+        var onMouseMove = function (event) {
+            if (that.enabled === false) {
                 return;
             }
             event.preventDefault();
 
             if (isUserSelect === true) {
                 // notify all objects of mouse move
-                for(var i = 0; i < that.selected.length; i++) {
+                for (var i = 0; i < that.selected.length; i++) {
                     that.selected[i].onMouseMove(getMouseCoordinates(event), false);
                 }
             } else if (isUserRotating === true) {
@@ -150,8 +155,8 @@ define(["three", "core/Object3D"], function() {
             }
         };
 
-        var onMouseUp = function(event) {
-            if(that.enabled === false) {
+        var onMouseUp = function (event) {
+            if (that.enabled === false) {
                 return;
             }
             event.preventDefault();
@@ -160,17 +165,17 @@ define(["three", "core/Object3D"], function() {
             isUserSelect = false;
 
             // notify all objects of mouse up
-            for(var i = 0; i < that.selected.length; i++) {
+            for (var i = 0; i < that.selected.length; i++) {
                 that.selected[i].onMouseUp(getMouseCoordinates(event), false);
             }
 
             that.selected = [];
 
-            that.domElement.removeEventListener('mousemove', that.onMouseMove,  false);
+            that.domElement.removeEventListener('mousemove', that.onMouseMove, false);
         };
 
-        var onMouseWheel = function(event) {
-            if(that.enabled === false || that.noZoom === true) {
+        var onMouseWheel = function (event) {
+            if (that.enabled === false || that.noZoom === true) {
                 return;
             }
             event.preventDefault();
@@ -197,8 +202,8 @@ define(["three", "core/Object3D"], function() {
             that.camera.updateProjectionMatrix();
         };
 
-        var onTouchStart = function(event) {
-            if(that.enabled === false) {
+        var onTouchStart = function (event) {
+            if (that.enabled === false) {
                 return;
             }
             event.preventDefault();
@@ -212,22 +217,22 @@ define(["three", "core/Object3D"], function() {
             }
         };
 
-        var onTouchMove = function(event) {
-            if(that.enabled === false) {
+        var onTouchMove = function (event) {
+            if (that.enabled === false) {
                 return;
             }
             event.preventDefault();
 
             if (event.touches.length == 1) { // one-fingered touch: rotate
-                that.yaw = (onMouseDownMouseX - event.touches[0].pageX)
-                    * 0.1 + onMouseDownLon;
-                that.pitch = (event.touches[0].pageY - onMouseDownMouseY)
-                    * 0.1 + onMouseDownLat;
+                that.yaw = (onMouseDownMouseX - event.touches[0].pageX) *
+                    0.1 + onMouseDownLon;
+                that.pitch = (event.touches[0].pageY - onMouseDownMouseY) *
+                    0.1 + onMouseDownLat;
             }
         };
 
-        var onTouchEnd = function(event) {
-            if(that.enabled === false) {
+        var onTouchEnd = function (event) {
+            if (that.enabled === false) {
                 return;
             }
             event.preventDefault();
@@ -246,6 +251,6 @@ define(["three", "core/Object3D"], function() {
 
     };
 
-    THREE.OrbitControls.prototype = Object.create( THREE.EventDispatcher.prototype );
+    THREE.OrbitControls.prototype = Object.create(THREE.EventDispatcher.prototype);
 
 });

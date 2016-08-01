@@ -1,6 +1,5 @@
 /**
- * This library helps to draw a panorama image in web browser, the same
- * functionality you see at here.com street level view.
+ * This library helps to draw a panorama image in web browser.
  * It builds on three.js r67. There is no guarantee that it will work with
  * other version of three.js.
  */

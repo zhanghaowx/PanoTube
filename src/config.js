@@ -4,6 +4,6 @@
 requirejs.config({
     paths: {
         // 3rd libraries
-        three: '../node_modules/three/three'
+        three: '../node_modules/three/build/three'
     },
 });
