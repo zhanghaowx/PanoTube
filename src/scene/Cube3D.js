@@ -13,12 +13,25 @@ define([
     "core/String",
     "three"
 ], function () {
+    // used internally for controlling size of the panorama cube
+    var cubeSize = 1000;
+    // used internally for texture mapping
+    var cubeResolution = 0;
+    // used internally for couting downloaded tiles
+    var tilesReadyCount = 0;
     /**
      * Cube3D represents a cube in a 3D world, and the camera is put in the
      * middle of this cube. Panoramic images are loaded for all the 6 faces of
      * the cube.
      */
     var Cube3D = function (mapContainer, options) {
+        // create user settings
+        this.settings = $.extend({
+            tiles: [], // in order of front,right,back,left,bottom,top
+            onTilesReady: function () {}, // get notification when all tiles are loaded
+            showPanorama: true, // visibility of panorama, used for debugging
+        }, options);
+
         // create a perspective camera
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
@@ -48,35 +61,8 @@ define([
     /**
      * Load panorama image to renderer
      */
-    Cube3D.prototype.loadPanorama = function (options) {
-        THREE.ImageUtils.crossOrigin = ''; // allow images from cross-origin servers
-
-        var that = this;
-
-        // create user settings
-        this.defaults = {
-            cubeSize: 1000, // used internally for dynamic resolutioni, controls size of the panorama cube
-            resolution: 0, // used internally for dynamic resolution (start from lowest resolution, and increase until resolution is high)
-            imageId: "", // either imageId or tiles must be set
-            tiles: [], // in order of front,right,back,left,bottom,top
-            onCubeReady: function () {
-                that.upgrade();
-                console.log("Cube (#{0}) of resolution {1} is loaded.".f(that.settings.imageId, that.settings.resolution));
-            },
-            showPanorama: true,
-            // example of blurArea settings
-            //            blurArea: {
-            //                width: 5,
-            //                height: 5,
-            //                azimuth: 90,
-            //                polar: 90,
-            //                focus: true,
-            //                offset: 10, // blur area needs be 10 degrees away from north/south pole,
-            //                static: false // whether or not allow rezie/move blur area
-            //            }
-        };
-        this.settings = $.extend({}, this.defaults, options);
-
+    Cube3D.prototype.loadScene = function (options) {
+        $.extend(this.settings, options);
         this.createPanorama();
         this.createBlurArea();
     }
@@ -85,52 +71,28 @@ define([
      * Check if the configuration is valid and fill some optional (unset) configuration values
      */
     Cube3D.prototype.validate = function () {
-        if (this.settings.tiles.length == 0 && this.settings.imageId.length == 0) {
-            console.error("Fail to create cube: either tiles or imageId must be set!");
-            return false;
-        }
-
-        // if tiles not set, fill it with URLs created from imageId and resolution
-        if (this.settings.tiles.length == 0)
-            return false; // TODO: check size of tiles against resolution
-
-        if (this.settings.imageId.length == 0) {
-            // TODO: remove imageId from settings
-        }
-
-        // Don't allow resolution 11 because it is more than necessary
-        if (this.settings.resolution < 0 || this.settings.resolution > 3) {
-            console.error("Fail to create cube: resolution value should be in [0, 3].");
+        var tilesPerFace = Math.round(this.settings.tiles.length / 6);
+        switch (tilesPerFace) {
+        case 0:
+            break;
+        case 1: // each face has 1 tile
+            cubeResolution = 0;
+            break;
+        case 4: // each face has 2x2 tiles
+            cubeResolution = 1;
+            break;
+        case 16: // each face has 4x4 tiles
+            cubeResolution = 2;
+            break;
+        case 64: // each face has 16x16 tiles
+            cubeResolution = 3;
+            break;
+        default:
+            console.error("Fail to create cube: invlaid number of tiles {0}!".format(this.settings.tiles.length));
             return false;
         }
 
         return true;
-    }
-
-    /**
-     * Upgrade resolution to next level
-     */
-    Cube3D.prototype.upgrade = function () {
-        this.settings.cubeSize++;
-        this.settings.resolution++;
-        this.settings.tiles = [];
-
-        // save before being changed
-        var oldCube = this.cube;
-        var oldOnCubeReady = this.settings.onCubeReady;
-
-        if (this.validate()) {
-            // remove old cube when new cube is ready
-            var that = this;
-            this.settings.onCubeReady = function () {
-                that.scene.remove(oldCube);
-                oldOnCubeReady();
-            }
-            this.createPanorama();
-        } else {
-            this.settings.cubeSize--;
-            this.settings.resolution--;
-        }
     }
 
     /**
@@ -201,14 +163,15 @@ define([
     /**
      * Load texture for a image tile
      */
-    var tilesReadyCount = 0;
     Cube3D.prototype.getTexture = function (path) {
+        THREE.ImageUtils.crossOrigin = ''; // allow images from cross-origin servers
+
         var that = this;
         return new THREE.MeshBasicMaterial({
             map: THREE.ImageUtils.loadTexture(path, undefined, function () {
                 tilesReadyCount++;
                 if (tilesReadyCount == that.settings.tiles.length) {
-                    that.settings.onCubeReady();
+                    that.settings.onTilesReady();
                 }
             }, function () {
                 console.error("Fail to load " + path);
@@ -236,9 +199,9 @@ define([
      */
     Cube3D.prototype.createCube = function () {
 
-        var textureSegments = Math.pow(2, this.settings.resolution);
+        var textureSegments = Math.pow(2, cubeResolution);
         var segments = Math.max(textureSegments, 16); // use 16 as minimum value to get rid of distortion
-        var geometry = new THREE.PanoramaCubeGeometry(this.settings.cubeSize, this.settings.cubeSize, this.settings.cubeSize, segments, segments, segments);
+        var geometry = new THREE.PanoramaCubeGeometry(cubeSize, cubeSize, cubeSize, segments, segments, segments);
 
         var facesCount = geometry.faces.length / 2; // each face has two triangles
 

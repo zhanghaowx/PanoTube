@@ -18,20 +18,9 @@
     <script data-main="../src/config.js" src="../node_modules/requirejs/require.js"></script>
     <script type="application/javascript">
         // Start loading the main app file. Put all of your application logic in there.
-        requirejs(['app', 'here/api'], function () {
+        requirejs(['app', 'here/api'], function() {
             var cube3D = $("#container").cube({
-                tiles: HERE.Panorama.getImageUrls("1027084269", HERE.Panorama.RESOLUTION.LOW),
-                /*
-                blurArea: {
-                    width: 10,
-                    height: 10,
-                    azimuth: 25,
-                    polar: 90,
-                    offset: 10,
-                    focus: true,
-                    static: true
-                }
-                */
+                tiles: HERE.Panorama.getImageUrls("1027084269", HERE.Panorama.RESOLUTION.HIGH)
             });
             cube3D.controller.autoRotate = true;
             cube3D.controller.autoRotateSpeed = 0.1;
@@ -40,7 +29,7 @@
              * Create a dashboard to monitor statistics
              * Requires: dat.gui (https://github.com/dataarts/dat.gui)
              */
-            var createDebugGUI = function (cube3D) {
+            var createDebugGUI = function(cube3D) {
                 var gui = new dat.GUI();
                 var cameraGUI = gui.addFolder('Camera');
                 cameraGUI.add(cube3D.controller, 'autoRotate');
@@ -49,7 +38,7 @@
                 cameraGUI.add(cube3D.controller, 'pitch').min(-85).max(85).listen();
                 cameraGUI.add(cube3D.camera, 'fov')
                     .min(cube3D.controller.minFov)
-                    .max(cube3D.controller.maxFov).listen().onChange(function () {
+                    .max(cube3D.controller.maxFov).listen().onChange(function() {
                         cube3D.camera.updateProjectionMatrix();
                     });
                 cameraGUI.open();
@@ -65,7 +54,7 @@
                 }
 
                 var debugGUI = gui.addFolder('Debug');
-                debugGUI.add(cube3D.settings, 'showPanorama').onChange(function (value) {
+                debugGUI.add(cube3D.settings, 'showPanorama').onChange(function(value) {
                     cube3D.cube.visible = value;
                 });
                 debugGUI.open();
