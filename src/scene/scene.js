@@ -3,17 +3,6 @@
  * functionality you see at here.com street level view.
  * It builds on three.js r67. There is no guarantee that it will work with
  * other version of three.js.
- * It expects an order of tile paths as following:
- * 1000017402_r9_f0_x0_y0.jpg
- * 1000017402_r9_f0_x1_y0.jpg
- * 1000017402_r9_f0_x0_y1.jpg
- * 1000017402_r9_f0_x1_y1.jpg ...
- * The definitions of face number(f), tile number(x,y) and resolution(r) are the same as in journey view API documentation.
- * For resolution (8 ~ 11):
- * <li>r8: each face has 1 x 1 = 1 tile</li>
- * <li>r9: each face has 2 x 2 = 4 tiles</li>
- * <li>r10: each face has 4 x 4 = 16 tiles</li>
- * <li>r11: each face has 8 x 8 = 64 tiles</li>
  */
 
 define([
@@ -67,9 +56,9 @@ define([
         // create user settings
         this.defaults = {
             cubeSize: 1000, // used internally for dynamic resolutioni, controls size of the panorama cube
-            resolution: 8, // used internally for dynamic resolution (start from lowest resolution, and increase until resolution is high)
+            resolution: 0, // used internally for dynamic resolution (start from lowest resolution, and increase until resolution is high)
             imageId: "", // either imageId or tiles must be set
-            tiles: [],
+            tiles: [], // in order of front,right,back,left,bottom,top
             onCubeReady: function () {
                 that.upgrade();
                 console.log("Cube (#{0}) of resolution {1} is loaded.".f(that.settings.imageId, that.settings.resolution));
@@ -110,8 +99,8 @@ define([
         }
 
         // Don't allow resolution 11 because it is more than necessary
-        if (this.settings.resolution < 8 || this.settings.resolution > 10) {
-            console.error("Fail to create cube: resolution value should be in [8, 10].");
+        if (this.settings.resolution < 0 || this.settings.resolution > 3) {
+            console.error("Fail to create cube: resolution value should be in [0, 3].");
             return false;
         }
 
@@ -247,7 +236,7 @@ define([
      */
     Cube3D.prototype.createCube = function () {
 
-        var textureSegments = Math.pow(2, this.settings.resolution - 8);
+        var textureSegments = Math.pow(2, this.settings.resolution);
         var segments = Math.max(textureSegments, 16); // use 16 as minimum value to get rid of distortion
         var geometry = new THREE.PanoramaCubeGeometry(this.settings.cubeSize, this.settings.cubeSize, this.settings.cubeSize, segments, segments, segments);
 

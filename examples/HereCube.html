@@ -21,7 +21,7 @@
         requirejs(['../src/cube', '../src/here/street.level'], function () {
             var randomPanoId = Math.floor((Math.random() * 100) + 1080363417).toString();
             var cube3D = $("#container").cube({
-                tiles: HERE.Panorama.getImageUrls(randomPanoId, 8),
+                tiles: HERE.Panorama.getImageUrls(randomPanoId, 0),
                 /*
                 blurArea: {
                     width: 10,
