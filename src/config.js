@@ -4,6 +4,7 @@
 requirejs.config({
     paths: {
         // 3rd libraries
-        three: '../node_modules/three/build/three'
+        three: '//cdnjs.cloudflare.com/ajax/libs/three.js/r79/three.min',
+        dat_gui: '//cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5.1/dat.gui.min'
     },
 });

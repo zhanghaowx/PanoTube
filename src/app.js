@@ -8,8 +8,8 @@ define([
     "scene/Cube3D",
     "scene/Sphere3D",
     "scene/BlurArea",
-    "geometries/PanoramaCubeGeometry",
     "controls/OrbitControls",
+    "dat_gui",
 ], function (Cube3D, Sphere3D) {
     var App = function (mapContainer) {
         // create a perspective camera
@@ -46,9 +46,6 @@ define([
         this.createBlurArea();
     }
 
-    /**
-     * Clear current panorama
-     */
     App.prototype.clearPanorama = function () {
         this.scene.remove(this.panorama);
         this.panorama = null;
@@ -100,6 +97,35 @@ define([
             }
         }
     }
+
+    /**
+     * Create a dashboard to monitor statistics
+     * Requires: dat.gui (https://github.com/dataarts/dat.gui)
+     */
+    App.prototype.createDebugGUI = function() {
+        var gui = new dat.GUI();
+        var cameraGUI = gui.addFolder('Camera');
+        cameraGUI.add(this.controller, 'autoRotate');
+        cameraGUI.add(this.controller, 'autoRotateSpeed').min(0.1).max(1);
+        cameraGUI.add(this.controller, 'yaw').min(-180).max(180).listen();
+        cameraGUI.add(this.controller, 'pitch').min(-85).max(85).listen();
+        cameraGUI.add(this.camera, 'fov')
+            .min(this.controller.minFov)
+            .max(this.controller.maxFov).listen().onChange(function() {
+                this.camera.updateProjectionMatrix();
+            });
+        cameraGUI.open();
+
+        if (this.settings.blurArea) {
+            var blurGUI = gui.addFolder('Blur');
+            blurGUI.add(this.blurArea.mesh.parameters, 'yaw').listen();
+            blurGUI.add(this.blurArea.mesh.parameters, 'pitch').listen();
+            blurGUI.add(this.blurArea.mesh.parameters, 'widthInDeg').listen();
+            blurGUI.add(this.blurArea.mesh.parameters, 'heightInDeg').listen();
+
+            blurGUI.open();
+        }
+    };
 
     /**
      * Detects whether the web browser supports WebGL or not

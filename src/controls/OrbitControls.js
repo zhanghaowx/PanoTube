@@ -28,7 +28,7 @@ define(["three", "core/Object3D"], function () {
 
         // Set to true to automatically rotate around the target
         this.autoRotate = false;
-        this.autoRotateSpeed = 0.5; // 12 seconds per round when fps is 60
+        this.autoRotateSpeed = 0.1; // 60 seconds per round when fps is 60
 
         // Camera yaw, pitch, and roll(not allowed)
         this.yaw = -90; // facing north by default

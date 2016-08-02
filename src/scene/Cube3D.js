@@ -1,6 +1,5 @@
 define([
     "geometries/PanoramaCubeGeometry",
-    "core/Object3D",
     "core/String",
     "three"
 ], function () {
