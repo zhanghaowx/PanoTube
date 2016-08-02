@@ -26,9 +26,10 @@ define(["three", "core/Object3D"], function () {
         this.minFov = 30;
         this.maxFov = 90;
 
-        // Set to true to automatically rotate around the target
-        this.autoRotate = false;
-        this.autoRotateSpeed = 0.1; // 60 seconds per round when fps is 60
+        this.autoRotate = {
+            enable: false, // Set to true to automatically rotate around the target
+            speed: 0.1 // 60 seconds per round when fps is 60
+        }
 
         // Camera yaw, pitch, and roll(not allowed)
         this.yaw = -90; // facing north by default
@@ -52,8 +53,8 @@ define(["three", "core/Object3D"], function () {
         var onMouseDownLat = 0;
 
         this.update = function () {
-            if (that.autoRotate && !isUserRotating && !isUserSelect) {
-                that.yaw += that.autoRotateSpeed;
+            if (that.autoRotate.enable && !isUserRotating && !isUserSelect) {
+                that.yaw += that.autoRotate.speed;
             }
 
             that.yaw = (that.yaw + 180 + 360) % 360 - 180; // adjust yaw's value to [-180, 180]
@@ -77,8 +78,7 @@ define(["three", "core/Object3D"], function () {
             // create mouse point in Normalized Device Coordinate (NDC) Space
             var domElement = that.domElement;
             var point = new THREE.Vector3(
-                ((event.clientX - domElement.offsetLeft) / domElement.width) * 2 - 1,
-                -((event.clientY - domElement.offsetTop) / domElement.height) * 2 + 1,
+                ((event.clientX - domElement.offsetLeft) / domElement.width) * 2 - 1, -((event.clientY - domElement.offsetTop) / domElement.height) * 2 + 1,
                 0.5);
             //that.projector.unprojectVector(point, that.camera);
             //r67 -> r79

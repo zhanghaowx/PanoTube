@@ -104,19 +104,24 @@ define([
      */
     App.prototype.createDebugGUI = function() {
         var gui = new dat.GUI();
+        var that = this;
+
+        var autoRotateGUI = gui.addFolder('AutoRotate');
+        autoRotateGUI.add(this.controller.autoRotate, 'enable');
+        autoRotateGUI.add(this.controller.autoRotate, 'speed').min(0.1).max(1);
+        autoRotateGUI.open();
+
         var cameraGUI = gui.addFolder('Camera');
-        cameraGUI.add(this.controller, 'autoRotate');
-        cameraGUI.add(this.controller, 'autoRotateSpeed').min(0.1).max(1);
         cameraGUI.add(this.controller, 'yaw').min(-180).max(180).listen();
         cameraGUI.add(this.controller, 'pitch').min(-85).max(85).listen();
         cameraGUI.add(this.camera, 'fov')
             .min(this.controller.minFov)
             .max(this.controller.maxFov).listen().onChange(function() {
-                this.camera.updateProjectionMatrix();
+                that.camera.updateProjectionMatrix();
             });
         cameraGUI.open();
 
-        if (this.settings.blurArea) {
+        if (this.blurArea) {
             var blurGUI = gui.addFolder('Blur');
             blurGUI.add(this.blurArea.mesh.parameters, 'yaw').listen();
             blurGUI.add(this.blurArea.mesh.parameters, 'pitch').listen();

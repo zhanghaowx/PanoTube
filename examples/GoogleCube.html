@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Here Panorama From Server</title>
+    <title>Google Panorama From Server</title>
     <style>
         body {
             margin: 0 auto;
@@ -14,14 +14,16 @@
 <body>
     <div id="container"></div>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../src/config.js" ></script>
-    <script src="js/here/api.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../src/config.js"></script>
+    <script src="js/google/api.js"></script>
     <script type="application/javascript">
+        /**
+         * Because the way Google's API provides requested street view image, the edges doesn't match.
+         */
         requirejs(['app'], function() {
             var cube3D = $("#container").panorama({
-                tiles: HERE.Panorama.getImageUrls("1027084269", HERE.Panorama.RESOLUTION.HIGH)
+                tiles: GOOGLE.Panorama.getImageUrls(40.758899, -73.9873197)
             });
-            cube3D.controller.autoRotate.enable = true;
             cube3D.createDebugGUI(cube3D);
         });
     </script>

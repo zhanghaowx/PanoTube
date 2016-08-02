@@ -31,7 +31,7 @@ define([
             return false;
         }
 
-        var tilesPerFace = Math.round(options.tiles.length / 6);
+        var tilesPerFace = options.tiles.length / 6;
         switch (tilesPerFace) {
         case 0:
             break;
