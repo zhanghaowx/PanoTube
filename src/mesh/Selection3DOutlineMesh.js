@@ -2,7 +2,7 @@ define(["three", "geometries/RectangleOutlineGeometry"], function () {
     /**
      * Create a mesh for the blur area
      */
-    THREE.BlurAreaOutlineMesh = function (yaw, pitch, widthInDeg, heightInDeg) {
+    THREE.Selection3DOutlineMesh = function (yaw, pitch, widthInDeg, heightInDeg) {
 
         this.parameters = {};
 
@@ -38,7 +38,7 @@ define(["three", "geometries/RectangleOutlineGeometry"], function () {
 
         // construct
         var meshMaterial = new THREE.MeshBasicMaterial({
-            color: "#ff0000",
+            color: "#1155C9",
             transparent: true,
             opacity: 0.75,
             overdraw: 0.1,
@@ -49,6 +49,6 @@ define(["three", "geometries/RectangleOutlineGeometry"], function () {
         THREE.Mesh.call(this, this.outlineGeometry, meshMaterial);
     };
 
-    THREE.BlurAreaOutlineMesh.prototype = Object.create(THREE.Mesh.prototype);
+    THREE.Selection3DOutlineMesh.prototype = Object.create(THREE.Mesh.prototype);
 
 });

@@ -1,11 +1,11 @@
 define([
     "three",
     "geometries/RectangleGeometry",
-    "mesh/BlurAreaMesh",
-    "mesh/BlurAreaOutlineMesh"
+    "mesh/Selection3DMesh",
+    "mesh/Selection3DOutlineMesh"
 ], function () {
 
-    THREE.BlurArea = function () {
+    THREE.Selection3D = function () {
 
         THREE.Object3D.call(this);
 
@@ -42,14 +42,14 @@ define([
 
         /// Either addDynamicMesh or addStaticMesh should be called after constructor
 
-        this.addDynamicMesh = function (azimuth, polar, widthInDeg, heightInDeg, offset) {
-            this.mesh = new THREE.BlurAreaMesh(azimuthToYaw(azimuth), polarToPitch(polar), widthInDeg, heightInDeg, offset);
+        this.addDynamicMesh = function (azimuth, polar, widthInDeg, heightInDeg) {
+            this.mesh = new THREE.Selection3DMesh(azimuthToYaw(azimuth), polarToPitch(polar), widthInDeg, heightInDeg);
             this.mesh.addControllers();
             this.children.push(this.mesh);
         };
 
         this.addStaticMesh = function (azimuth, polar, widthInDeg, heightInDeg) {
-            this.mesh = new THREE.BlurAreaOutlineMesh(azimuthToYaw(azimuth), polarToPitch(polar), widthInDeg, heightInDeg);
+            this.mesh = new THREE.Selection3DOutlineMesh(azimuthToYaw(azimuth), polarToPitch(polar), widthInDeg, heightInDeg);
             this.children.push(this.mesh);
         };
 
@@ -75,5 +75,5 @@ define([
         };
     };
 
-    THREE.BlurArea.prototype = Object.create(THREE.Object3D.prototype);
+    THREE.Selection3D.prototype = Object.create(THREE.Object3D.prototype);
 });

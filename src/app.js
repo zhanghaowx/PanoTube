@@ -7,7 +7,7 @@
 define([
     "scene/Cube3D",
     "scene/Sphere3D",
-    "scene/BlurArea",
+    "scene/Selection3D",
     "controls/OrbitControls",
     "dat_gui",
 ], function (Cube3D, Sphere3D) {
@@ -43,7 +43,7 @@ define([
      */
     App.prototype.loadScene = function (options) {
         this.createPanorama(options);
-        this.createBlurArea();
+        this.createSelection3D();
     }
 
     App.prototype.clearPanorama = function () {
@@ -63,38 +63,48 @@ define([
         }
     }
 
-    App.prototype.clearBlurArea = function () {
-        if (this.blurArea != null) {
-            this.scene.remove(this.blurArea);
-            this.blurArea = null;
-        }
+    App.prototype.clearSelection3D = function () {
+        var index = this.controller.selectable.indexOf(this.selection3D);
+        if (index > -1)
+            this.controller.selectable.splice(index, 1)
 
-        this.controller.selectable = [];
+        if (this.selection3D != null) {
+            this.scene.remove(this.selection3D);
+            this.selection3D = null;
+        }
     }
 
-    App.prototype.createBlurArea = function () {
-        if (this.settings && this.settings.blurArea) {
-            this.blurArea = new THREE.BlurArea();
-            if (this.settings.blurArea.static) {
-                this.blurArea.addStaticMesh(this.settings.blurArea.azimuth, this.settings.blurArea.polar,
-                    this.settings.blurArea.width, this.settings.blurArea.height);
-            } else {
-                this.blurArea.addDynamicMesh(this.settings.blurArea.azimuth, this.settings.blurArea.polar,
-                    this.settings.blurArea.width, this.settings.blurArea.height, this.settings.blurArea.offset);
-            }
+    App.prototype.createSelection3D = function (options) {
+        var defaults = {
+            static: false,
+            azimuth: 90,
+            polar: 90,
+            width: 10,
+            height: 10,
+            focus: true
+        };
+        var settings = $.extend(defaults, options);
 
-            this.scene.add(this.blurArea);
+        this.selection3D = new THREE.Selection3D();
+        if (settings.static) {
+            this.selection3D.addStaticMesh(settings.azimuth, settings.polar,
+                settings.width, settings.height);
+        } else {
+            this.selection3D.addDynamicMesh(settings.azimuth, settings.polar,
+                settings.width, settings.height);
+        }
 
-            // move camera to blur area
-            if (this.settings.blurArea.focus) {
-                this.controller.yaw = this.blurArea.getParameters().yaw;
-                this.controller.pitch = this.blurArea.getParameters().pitch;
-            }
+        this.scene.add(this.selection3D);
 
-            // add blur area to selectable
-            if (!this.settings.blurArea.static) {
-                this.controller.selectable.push(this.blurArea);
-            }
+        // move camera to blur area
+        if (settings.focus) {
+            this.controller.yaw = this.selection3D.getParameters().yaw;
+            this.controller.pitch = this.selection3D.getParameters().pitch;
+        }
+
+        // add blur area to selectable
+        if (!settings.static) {
+            this.controller.selectable.push(this.selection3D);
         }
     }
 
@@ -102,7 +112,7 @@ define([
      * Create a dashboard to monitor statistics
      * Requires: dat.gui (https://github.com/dataarts/dat.gui)
      */
-    App.prototype.createDebugGUI = function() {
+    App.prototype.createDebugGUI = function () {
         var gui = new dat.GUI();
         var that = this;
 
@@ -116,17 +126,17 @@ define([
         cameraGUI.add(this.controller, 'pitch').min(-85).max(85).listen();
         cameraGUI.add(this.camera, 'fov')
             .min(this.controller.minFov)
-            .max(this.controller.maxFov).listen().onChange(function() {
+            .max(this.controller.maxFov).listen().onChange(function () {
                 that.camera.updateProjectionMatrix();
             });
         cameraGUI.open();
 
-        if (this.blurArea) {
+        if (this.selection3D) {
             var blurGUI = gui.addFolder('Blur');
-            blurGUI.add(this.blurArea.mesh.parameters, 'yaw').listen();
-            blurGUI.add(this.blurArea.mesh.parameters, 'pitch').listen();
-            blurGUI.add(this.blurArea.mesh.parameters, 'widthInDeg').listen();
-            blurGUI.add(this.blurArea.mesh.parameters, 'heightInDeg').listen();
+            blurGUI.add(this.selection3D.mesh.parameters, 'yaw').listen();
+            blurGUI.add(this.selection3D.mesh.parameters, 'pitch').listen();
+            blurGUI.add(this.selection3D.mesh.parameters, 'widthInDeg').listen();
+            blurGUI.add(this.selection3D.mesh.parameters, 'heightInDeg').listen();
 
             blurGUI.open();
         }

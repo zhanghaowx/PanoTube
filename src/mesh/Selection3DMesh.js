@@ -3,7 +3,7 @@ define(["three", "geometries/RectangleGeometry"], function () {
     /**
      * Create a mesh for the blur area
      */
-    THREE.BlurAreaMesh = function (yaw, pitch, widthInDeg, heightInDeg, offset) {
+    THREE.Selection3DMesh = function (yaw, pitch, widthInDeg, heightInDeg) {
 
         this.parameters = {};
 
@@ -20,11 +20,6 @@ define(["three", "geometries/RectangleGeometry"], function () {
 
         this.minPitch = -90;
         this.maxPitch = 90;
-
-        /**
-         * Offset in degrees that the blur area needs to be away from north/south pole
-         */
-        this.offset = offset;
 
         this.onMouseDown = function (point) {
             this.material.color.setHex(0xffff00);
@@ -113,8 +108,8 @@ define(["three", "geometries/RectangleGeometry"], function () {
             var newWidth = Math.abs((thisYawPitch.yaw + thatYawPitch.yaw));
             var newHeight = Math.abs(thisYawPitch.pitch + thatYawPitch.pitch);
 
-            newHeight = Math.min((that.parameters.pitch - that.minPitch - that.offset) * 2.0, newHeight);
-            newHeight = Math.min((that.maxPitch - that.parameters.pitch - that.offset) * 2.0, newHeight);
+            newHeight = Math.min((that.parameters.pitch - that.minPitch) * 2.0, newHeight);
+            newHeight = Math.min((that.maxPitch - that.parameters.pitch) * 2.0, newHeight);
 
             setupParameters(newYaw, newPitch, newWidth, newHeight);
 
@@ -207,7 +202,7 @@ define(["three", "geometries/RectangleGeometry"], function () {
         };
 
         var correctParameters = function() {
-            that.parameters.pitch = Math.min(that.maxPitch - that.parameters.heightInDeg / 2.0 - that.offset, Math.max(that.minPitch + that.parameters.heightInDeg / 2.0 + that.offset, that.parameters.pitch));
+            that.parameters.pitch = Math.min(that.maxPitch - that.parameters.heightInDeg / 2.0, Math.max(that.minPitch + that.parameters.heightInDeg / 2.0, that.parameters.pitch));
         };
 
 
@@ -226,6 +221,6 @@ define(["three", "geometries/RectangleGeometry"], function () {
         THREE.Mesh.call(this, this.rectangleGeometry, meshMaterial);
     };
 
-    THREE.BlurAreaMesh.prototype = Object.create(THREE.Mesh.prototype);
+    THREE.Selection3DMesh.prototype = Object.create(THREE.Mesh.prototype);
 
 });
