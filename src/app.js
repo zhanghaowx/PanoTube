@@ -76,14 +76,17 @@ define([
 
     App.prototype.createSelection3D = function (options) {
         var defaults = {
-            static: false,
-            azimuth: 90,
-            polar: 90,
-            width: 10,
-            height: 10,
-            focus: true
+            azimuth: 20,// horizontal angle measured anti-clockwise from a north base line
+            polar: 90,// vertical angle measure from top to bottom
+            width: 10,// width of the seleciton area in degrees
+            height: 10,// height of the selection area in degrees
+            focus: true,// whether or not to set camera to selection area
+            static: false,// whether or not user can drag and resize the area
+            enable: false,
         };
         var settings = $.extend(defaults, options);
+        if (!settings.enable)
+            return;
 
         this.selection3D = new THREE.Selection3D();
         if (settings.static) {
