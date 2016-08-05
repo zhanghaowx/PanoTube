@@ -19,6 +19,7 @@
     <script type="application/javascript">
         requirejs(['app'], function() {
             var cube3D = $("#container").panorama({
+                type: "cube",
                 tiles: HERE.Panorama.getImageUrls("1027084269", HERE.Panorama.RESOLUTION.HIGH)
             });
             cube3D.controller.autoRotate.enable = true;

@@ -52,9 +52,12 @@ define([
     };
 
     App.prototype.createPanorama = function (options) {
-        if (Cube3D.validate(options)) {
+        if (!options.type) {
+            console.error("Please choose a Panorma type!");
+        }
+        if (options.type === Cube3D.TYPE && Cube3D.validate(options)) {
             this.panorama = (new Cube3D(options)).createCube();
-        } else if (Sphere3D.validate(options)) {
+        } else if (options.type === Sphere3D.TYPE && Sphere3D.validate(options)) {
             this.panorama = (new Sphere3D(options)).createSphere();
         }
 
@@ -76,12 +79,12 @@ define([
 
     App.prototype.createSelection3D = function (options) {
         var defaults = {
-            azimuth: 20,// horizontal angle measured anti-clockwise from a north base line
-            polar: 90,// vertical angle measure from top to bottom
-            width: 10,// width of the seleciton area in degrees
-            height: 10,// height of the selection area in degrees
-            focus: true,// whether or not to set camera to selection area
-            static: false,// whether or not user can drag and resize the area
+            azimuth: 20, // horizontal angle measured anti-clockwise from a north base line
+            polar: 90, // vertical angle measure from top to bottom
+            width: 10, // width of the seleciton area in degrees
+            height: 10, // height of the selection area in degrees
+            focus: true, // whether or not to set camera to selection area
+            static: false, // whether or not user can drag and resize the area
             enable: false,
         };
         var settings = $.extend(defaults, options);

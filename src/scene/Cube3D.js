@@ -22,6 +22,8 @@ define([
         }, options);
     };
 
+    Cube3D.TYPE = "cube";
+
     /**
      * Check if the configuration is valid and fill some optional (unset) configuration values
      */

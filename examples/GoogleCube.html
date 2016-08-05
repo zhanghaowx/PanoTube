@@ -22,6 +22,7 @@
          */
         requirejs(['app'], function() {
             var cube3D = $("#container").panorama({
+                type: "cube",
                 tiles: GOOGLE.Panorama.getImageUrls(40.758899, -73.9873197)
             });
             cube3D.createDebugGUI(cube3D);

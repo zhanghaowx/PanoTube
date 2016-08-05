@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Basic Panorama Using Single Panorama Image</title>
+    <title>Google Panorama From Server</title>
     <style>
         body {
             margin: 0 auto;
@@ -15,11 +15,19 @@
     <div id="container"></div>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../src/config.js"></script>
+    <script src="js/google/api.js"></script>
     <script type="application/javascript">
+        /**
+         * Because the way Google's API provides requested street view image, the edges doesn't match.
+         */
         requirejs(['app'], function() {
-            $("#container").panorama({
-                type: 'sphere',
-                tiles: ["images/panoramas/indoor.jpg"]
+            var zoom = 2;
+            var cube3D = $("#container").panorama({
+                type: "sphere",
+                tiles: GOOGLE.Panorama.getRawImageUrls("aGE0sa518wMxN2TvTKNklw", zoom),
+                rows: Math.pow(2, zoom - 1),
+                columns: Math.pow(2, zoom),
+                dimensionOffset: -96
             });
         });
     </script>

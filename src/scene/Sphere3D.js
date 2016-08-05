@@ -10,45 +10,74 @@ define([
     var Sphere3D = function (options) {
         // create user settings
         this.settings = $.extend({
-            texture: "",
+            tiles: [],
+            rows: 1, // number of tiles horizontally
+            columns: 1, // number of tiles vertically
+            dimensionOffset: 0
         }, options);
+        // canvas for creating texture by merging tiles
+        this.canvas = document.createElement('canvas');
+        this.context = this.canvas.getContext('2d');
     };
+
+    Sphere3D.TYPE = "sphere";
 
     /**
      * Check if the configuration is valid and fill some optional (unset) configuration values
      */
     Sphere3D.validate = function (options) {
-        if (!options.texture) {
-            console.debug("Skip creating sphere: no texture provided!");
+        if (!options.tiles) {
+            console.debug("Skip creating sphere: no tiles provided!");
             return false;
         }
 
         return true;
-    }
+    };
 
-    /**
-     * Create material for cube mesh
-     */
-    Sphere3D.prototype.createMaterials = function () {
-        THREE.ImageUtils.crossOrigin = ''; // allow images from cross-origin servers
-        var texture = this.settings.texture;
-        return new THREE.MeshBasicMaterial({
-            map: new THREE.TextureLoader().load(texture, undefined, function () {
-                console.debug("Texture " + texture + " loaded.")
-            }, function () {
-                console.error("Fail to load " + texture);
-            })
-        });
+    var isInitialized = false;
+    Sphere3D.prototype.initializeContext = function (width, height) {
+        if (isInitialized)
+            return;
+        isInitialized = true;
+
+        this.canvas.width = width;
+        this.canvas.height = height;
+        this.context.translate(this.canvas.width, 0);
+        this.context.scale(-1, 1);
+        console.debug("Context initialized with dimensions {0}x{1}".format(width, height));
     }
 
     /**
      * Create a cube mesh with materials
      */
     Sphere3D.prototype.createSphere = function () {
-        var geometry = new THREE.SphereGeometry(500, 60, 40);
+        var geometry = new THREE.SphereGeometry(1000, 60, 40);
         geometry.scale(-1, 1, 1);
 
-        return new THREE.Mesh(geometry, this.createMaterials());
+        var self = this;
+        var texture = new THREE.Texture(this.canvas);
+
+        for (var y = 0; y < this.settings.rows; y++) {
+            for (var x = 0; x < this.settings.columns; x++) {
+                (function (x, y) {
+                    var img = new Image();
+                    img.addEventListener('load', function () {
+                        self.initializeContext(self.settings.columns * (img.width + self.settings.dimensionOffset), self.settings.rows * ((img.height + self.settings.dimensionOffset)))
+                        self.context.drawImage(this, x * img.width, y * img.height);
+                        texture.needsUpdate = true;
+                    });
+                    img.crossOrigin = '';
+                    img.src = self.settings.tiles[y * self.settings.columns + x];
+                })(x, y);
+            }
+        }
+
+        // tiles merged into a single image attached to texture
+        var texture = new THREE.Texture(this.canvas);
+        var material = new THREE.MeshBasicMaterial({
+            map: texture
+        });
+        return new THREE.Mesh(geometry, material);
     };
 
     return Sphere3D;
