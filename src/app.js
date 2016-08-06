@@ -13,14 +13,14 @@ define([
 ], function (Cube3D, Sphere3D) {
     var App = function (mapContainer) {
         // create a perspective camera
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.camera = new THREE.PerspectiveCamera(75, mapContainer.width() / mapContainer.height(), 0.1, 1000);
 
         // create a proper renderer
         this.renderer = this.supportsWebGL() ? new THREE.WebGLRenderer({
             antialias: true,
             preserveDrawingBuffer: true // for taking screenshots, it can cause significant performance loss on some platforms
         }) : new THREE.CanvasRenderer();
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.setSize(mapContainer.width(), mapContainer.height());
 
         // create a camera controller
         this.controller = new THREE.OrbitControls(this.camera, this.renderer.domElement);
@@ -33,7 +33,7 @@ define([
         this.scene = new THREE.Scene();
 
         // bind resize event
-        window.addEventListener('resize', this.onWindowResize.bind(this), false);
+        mapContainer.resize(this.onWindowResize.bind(this));
 
         this.draw();
     };

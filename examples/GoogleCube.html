@@ -4,15 +4,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Google Panorama From Server</title>
-    <style>
-        body {
-            margin: 0 auto;
-        }
-    </style>
+    <link href="css/main.css" rel="stylesheet" />
 </head>
 
 <body>
-    <div id="container"></div>
+    <div class="panorama"></div>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../src/config.js"></script>
     <script src="js/google/api.js"></script>
@@ -21,7 +17,7 @@
          * Because the way Google's API provides requested street view image, the edges doesn't match.
          */
         requirejs(['app'], function() {
-            var cube3D = $("#container").panorama({
+            var cube3D = $(".panorama").panorama({
                 type: "cube",
                 tiles: GOOGLE.Panorama.getImageUrls(40.758899, -73.9873197)
             });

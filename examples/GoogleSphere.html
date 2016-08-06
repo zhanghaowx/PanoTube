@@ -4,15 +4,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Google Panorama From Server</title>
-    <style>
-        body {
-            margin: 0 auto;
-        }
-    </style>
+    <link href="css/main.css" rel="stylesheet" />
 </head>
 
 <body>
-    <div id="container"></div>
+    <div class="panorama"></div>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../src/config.js"></script>
     <script src="js/google/api.js"></script>
@@ -22,13 +18,15 @@
          */
         requirejs(['app'], function() {
             var zoom = 2;
-            var cube3D = $("#container").panorama({
+            var cube3D = $(".panorama").panorama({
                 type: "sphere",
                 tiles: GOOGLE.Panorama.getRawImageUrls("aGE0sa518wMxN2TvTKNklw", zoom),
                 rows: Math.pow(2, zoom - 1),
                 columns: Math.pow(2, zoom),
                 dimensionOffset: -96
             });
+            cube3D.controller.autoRotate.enable = true;
+            cube3D.createDebugGUI(cube3D);
         });
     </script>
 </body>
