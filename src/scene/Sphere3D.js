@@ -18,6 +18,7 @@ define([
         // canvas for creating texture by merging tiles
         this.canvas = document.createElement('canvas');
         this.context = this.canvas.getContext('2d');
+        this.isInitialized = false;
     };
 
     Sphere3D.TYPE = "sphere";
@@ -34,11 +35,10 @@ define([
         return true;
     };
 
-    var isInitialized = false;
     Sphere3D.prototype.initializeContext = function (width, height) {
-        if (isInitialized)
+        if (this.isInitialized)
             return;
-        isInitialized = true;
+        this.isInitialized = true;
 
         this.canvas.width = width;
         this.canvas.height = height;
