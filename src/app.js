@@ -44,7 +44,7 @@ define([
     App.prototype.loadScene = function (options) {
         this.createPanorama(options);
         this.createSelection3D();
-    }
+    };
 
     App.prototype.clearPanorama = function () {
         this.scene.remove(this.panorama);
@@ -59,12 +59,14 @@ define([
             this.panorama = (new Cube3D(options)).createCube();
         } else if (options.type === Sphere3D.TYPE && Sphere3D.validate(options)) {
             this.panorama = (new Sphere3D(options)).createSphere();
+        } else {
+            console.error("Unkown type of panorama: {0}".format(options.type));
         }
 
         if (this.panorama) {
             this.scene.add(this.panorama);
         }
-    }
+    };
 
     App.prototype.clearSelection3D = function () {
         var index = this.controller.selectable.indexOf(this.selection3D);
@@ -75,7 +77,7 @@ define([
             this.scene.remove(this.selection3D);
             this.selection3D = null;
         }
-    }
+    };
 
     App.prototype.createSelection3D = function (options) {
         var defaults = {
@@ -112,7 +114,26 @@ define([
         if (!settings.static) {
             this.controller.selectable.push(this.selection3D);
         }
-    }
+    };
+
+    App.prototype.useWireframe = function (enable) {
+        var material = this.panorama.material;
+        if (!material)
+            return;
+
+        if (material.wireframe !== undefined) {
+            material.wireframe = enable;
+        } else if (material.materials) {
+            material.materials.forEach(function (material) {
+                if (material.wireframe !== undefined)
+                    material.wireframe = enable;
+                else
+                    console.error("Cannot switch from/to wireframe!!");
+            });
+        } else {
+            console.error("Cannot switch from/to wireframe!!");
+        }
+    };
 
     /**
      * Create a dashboard to monitor statistics
@@ -136,6 +157,15 @@ define([
                 that.camera.updateProjectionMatrix();
             });
         cameraGUI.open();
+
+        var debugGUI = gui.addFolder('Debug');
+        var debug = {
+            wireframe: false
+        };
+        debugGUI.add(debug, 'wireframe').onChange(function () {
+            that.useWireframe(debug.wireframe);
+        });
+        debugGUI.open();
 
         if (this.selection3D) {
             var blurGUI = gui.addFolder('Blur');

@@ -55,7 +55,7 @@ define([
         }
 
         return true;
-    }
+    };
 
     /**
      * Load texture for a image tile
@@ -75,7 +75,7 @@ define([
             }),
             overdraw: true
         });
-    }
+    };
 
     /**
      * Create material for cube mesh
@@ -88,7 +88,7 @@ define([
         }
 
         return new THREE.MeshFaceMaterial(materials);
-    }
+    };
 
 
     /**

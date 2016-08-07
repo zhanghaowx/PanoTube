@@ -35,6 +35,9 @@ define([
         return true;
     };
 
+    /**
+     * Initialize the size of canvas and context
+     */
     Sphere3D.prototype.initializeContext = function (width, height) {
         if (this.isInitialized)
             return;
@@ -45,7 +48,7 @@ define([
         this.context.translate(this.canvas.width, 0);
         this.context.scale(-1, 1);
         console.debug("Context initialized with dimensions {0}x{1}".format(width, height));
-    }
+    };
 
     /**
      * Create a cube mesh with materials
@@ -77,6 +80,7 @@ define([
         var material = new THREE.MeshBasicMaterial({
             map: texture
         });
+
         return new THREE.Mesh(geometry, material);
     };
 
